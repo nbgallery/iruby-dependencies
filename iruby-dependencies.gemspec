@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Kyle King"]
   spec.email         = ["kylejking@gmail.com"]
 
-  spec.summary       = %q{Inject dependencies into IRuby notebooks}
+  spec.summary       = %q{IRuby::Dependencies is a module for injecting Ruby dependencies into Jupyter Notebooks}
   spec.homepage      = "https://github.com/kylekyle/iruby-dependencies"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
