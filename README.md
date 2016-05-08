@@ -28,7 +28,7 @@ IRuby::Dependencies uses the [Bundler Gemfile syntax](http://bundler.io/v1.5/gem
 | `script <url>` | Loads the javascript at the given url into the notebook as a `script` tag |
 | `define <hash>` | Defines alternate paths for requirejs modules. Keys are modules, values are paths |
 | `exec <string>` | Executes the system command, for example `yum install gsl` |
-| `css` | Loads the stylesheet at the given url into the notebook as a `link` tag 
+| `css <string>` | Loads the stylesheet at the given url into the notebook as a `link` tag 
 
 To see the normal bundler output, pass `verbose: true` to the dependencies method: 
 
