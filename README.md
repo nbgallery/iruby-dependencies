@@ -1,6 +1,6 @@
 # IRuby::Dependencies
 
-IRuby::Dependencies is a module for injecting Ruby dependencies into Jupyter Notebooks. For example, 
+`IRuby::Dependencies` is a module for injecting Ruby dependencies into Jupyter Notebooks. For example, 
 
 ```ruby 
 require 'iruby/dependencies'
@@ -21,7 +21,7 @@ You'll have to restart any IRuby kernels already running.
 
 ## Usage
 
-IRuby::Dependencies uses the [Bundler Gemfile syntax](http://bundler.io/v1.5/gemfile.html) with some additional methods:
+`IRuby::Dependencies` uses the [Bundler Gemfile syntax](http://bundler.io/v1.5/gemfile.html) with some additional methods:
 
 | Method | Description |
 | ------ | ----------- |
@@ -41,4 +41,4 @@ end
 
 ## Active Gems
 
-Gems active at the time IRuby::Dependencies are added to the dependency bundle. This means that you cannot specify a different version of a gem already being used by IRuby. If you really need a different version of that gem, install it on the command line and restart the kernel.  
+When `IRuby::Dependencies` is first loaded, it saves a list of all active gems, which are added to the dependency bundle. For example, since IRuby uses multi_json, the multi_json gem is always included in the bundle. Active gems cannot be removed and their versions are fixed. If you need a different version of an active gem, install it on the command line and restart the kernel. To reduce the number of active gems, `require 'iruby/dependencies'` as early in your notebook as possible. 
