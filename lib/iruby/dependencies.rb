@@ -3,6 +3,9 @@ require 'iruby/dependencies/dsl'
 require 'iruby/dependencies/config'
 require 'iruby/dependencies/version'
 
+# require 'mypki' if requested so it is an active gem
+require 'mypki' if Bundler.settings['dependencies.mypki']
+
 module IRuby
   module Dependencies
     paths = Gem.path.map {|p| File.join p, 'gems'}
@@ -17,11 +20,7 @@ module IRuby
     # this code is taken from bundler/inline with small changes
     def self.dependencies verbose: false, &gemfile
       Bundler.ui = verbose ? Bundler::UI::Shell.new : nil
-
-      if Bundler.settings['dependencies.mypki']
-        require 'mypki'
-        MyPKI.init
-      end
+      MyPKI.init if Bundler.settings['dependencies.mypki']
 
       warn 'Dependencies installing. This could take a minute ...'
       old_root = Bundler.method(:root)
