@@ -36,6 +36,7 @@ module IRuby
       builder = Dsl.new
       builder.instance_eval(&gemfile)
 
+      Gem::ConfigFile.new ['sources']
       Gem.sources.each {|s| builder.source s}
 
       ACTIVE_GEMS.each do |name,version|
