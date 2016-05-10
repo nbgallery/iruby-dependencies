@@ -20,7 +20,6 @@ module IRuby
     # this code is taken from bundler/inline with small changes
     def self.dependencies verbose: false, &gemfile
       Bundler.ui = verbose ? Bundler::UI::Shell.new : nil
-      MyPKI.init if Bundler.settings['dependencies.mypki']
 
       warn 'Dependencies installing. This could take a minute ...'
       old_root = Bundler.method(:root)
