@@ -10,6 +10,9 @@ module IRuby
   module Dependencies
     paths = Gem.path.map {|p| File.join p, 'gems'}
 
+    # activate default gems
+    %w[bigdecimal io-console json psych rdoc].each {|g| gem g}
+
     ACTIVE_GEMS = $LOAD_PATH.each_with_object({}) do |path,hash|
       paths.each do |gem_path|
         match = path.match /#{gem_path}\/((?:\w|-)+)-((?:\d+\.?)+)/
@@ -38,7 +41,7 @@ module IRuby
       Gem.sources.each {|s| builder.source s}
 
       ACTIVE_GEMS.each do |name,version|
-        builder.gem name, version
+        builder.gem name, version, require: false
       end
 
       Config.process builder
