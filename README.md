@@ -11,6 +11,10 @@ dependencies do
 end
 ```
 
+## RubyGems Compatability 
+
+There are issues with **rerunning** dependency blocks on machine with RubyGem versions greater than 2.4.5.1. 
+
 ## Installation
 
 ```bash
