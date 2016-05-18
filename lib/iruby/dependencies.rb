@@ -1,6 +1,6 @@
-require 'bundler'
 require 'iruby/dependencies/dsl'
 require 'iruby/dependencies/config'
+require 'iruby/dependencies/unload'
 require 'iruby/dependencies/version'
 
 # require 'mypki' if requested so it is an active gem
@@ -22,6 +22,8 @@ module IRuby
 
     # this code is taken from bundler/inline with small changes
     def self.dependencies verbose: false, &gemfile
+      Bundler.unload!
+
       Bundler.ui = verbose ? Bundler::UI::Shell.new : nil
       MyPKI.init if Bundler.settings['dependencies.mypki']
       
