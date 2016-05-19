@@ -4,7 +4,10 @@ require 'iruby/dependencies/unload'
 require 'iruby/dependencies/version'
 
 # require 'mypki' if requested so it is an active gem
-require 'mypki' if Bundler.settings['dependencies.mypki']
+if Bundler.settings['dependencies.mypki']
+  require 'mypki' 
+  require 'erector'
+end
 
 module IRuby
   module Dependencies
