@@ -11,20 +11,17 @@ end
 
 module IRuby
   module Dependencies
-    paths = Gem.path.map {|p| File.join p, 'gems'}
+    ACTIVE_GEMS = {}
 
     # activate default gems
     %w[bigdecimal io-console json psych rdoc].each {|g| gem g}
 
-    ACTIVE_GEMS = $LOAD_PATH.each_with_object({}) do |path,hash|
-      paths.each do |gem_path|
-        match = path.match /#{gem_path}\/((?:\w|-)+)-((?:\d+\.?)+)/
-        hash.merge! Hash[*match.captures] unless match.nil?
-      end
-    end
-
     # this code is taken from bundler/inline with small changes
     def self.dependencies verbose: false, &gemfile
+      if ACTIVE_GEMS.empty?
+        ACTIVE_GEMS.merge! Gem.loaded_specs.map{|n,s| [n,s.version.to_s]}.to_h
+      end
+
       Bundler.unload!
 
       Bundler.ui = verbose ? Bundler::UI::Shell.new : nil
