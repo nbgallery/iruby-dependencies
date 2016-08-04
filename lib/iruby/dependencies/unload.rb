@@ -14,9 +14,4 @@ module Bundler
       Gem::Specification.all = ORIGINAL_SPECS
     end
   end
-
-  module ShareHelpers
-    def clean_load_path
-    end
-  end
 end
