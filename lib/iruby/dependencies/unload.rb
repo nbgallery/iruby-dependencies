@@ -1,5 +1,3 @@
-require 'bundler'
-
 # a minor modification of the code from the 
 # bundler-unload gem
 module Bundler 
@@ -14,6 +12,11 @@ module Bundler
       @load = @definition = nil
       ENV.replace ORIGINAL_ENV
       Gem::Specification.all = ORIGINAL_SPECS
+    end
+  end
+
+  module ShareHelpers
+    def clean_load_path
     end
   end
 end

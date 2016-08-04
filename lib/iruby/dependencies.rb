@@ -1,6 +1,8 @@
+require 'bundler'
 require 'iruby/dependencies/dsl'
 require 'iruby/dependencies/config'
 require 'iruby/dependencies/unload'
+require 'iruby/dependencies/shared_helpers'
 require 'iruby/dependencies/version'
 
 # require 'mypki' if requested so it is an active gem

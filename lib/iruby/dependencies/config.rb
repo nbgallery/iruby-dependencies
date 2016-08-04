@@ -24,7 +24,6 @@ module IRuby
               end
 
               definition = builder.to_definition nil, true
-              #definition.resolve
               
               definition.specs.each do |spec|
                 if commands = config.delete(spec.name)
