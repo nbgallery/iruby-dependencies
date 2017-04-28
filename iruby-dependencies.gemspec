@@ -19,6 +19,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "iruby"
   spec.add_dependency "multi_json"
-  spec.add_dependency "bundler", "~> 1.12"
+  spec.add_dependency "bundler", "~> 1.13.0"
   spec.add_development_dependency "rake", "~> 10.0"
 end
