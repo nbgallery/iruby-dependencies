@@ -1,9 +1,4 @@
 require 'bundler'
-require 'iruby/dependencies/dsl'
-require 'iruby/dependencies/config'
-require 'iruby/dependencies/unload'
-require 'iruby/dependencies/shared_helpers'
-require 'iruby/dependencies/version'
 
 # require 'mypki' if requested so it is an active gem
 if Bundler.settings['dependencies.mypki']
@@ -11,20 +6,24 @@ if Bundler.settings['dependencies.mypki']
   require 'erector'
 end
 
+if gems = Bundler.settings['dependencies.require']
+  gems.split(':').each {|gem| require gem}
+end
+
+require 'iruby/dependencies/dsl'
+require 'iruby/dependencies/config'
+require 'iruby/dependencies/shared_helpers'
+require 'iruby/dependencies/version'
+
 module IRuby
   module Dependencies
     ACTIVE_GEMS = {}
-
-    # activate default gems
-    %w[bigdecimal io-console json psych rdoc].each {|g| gem g}
 
     # this code is taken from bundler/inline with small changes
     def self.dependencies verbose: false, &gemfile
       if ACTIVE_GEMS.empty?
         ACTIVE_GEMS.merge! Gem.loaded_specs.map{|n,s| [n,s.version.to_s]}.to_h
       end
-
-      Bundler.unload!
 
       Bundler.ui = verbose ? Bundler::UI::Shell.new : nil
       MyPKI.init if Bundler.settings['dependencies.mypki']
