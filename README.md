@@ -23,6 +23,28 @@ $ gem install iruby-dependencies
 
 You'll have to restart any IRuby kernels already running. 
 
+## Configuration
+
+`IRuby::Dependencies` reads in configuration from Bundler (see `bundle config`). The following configuration parameters are available:
+
+| Key | Description |
+| ------ | ----------- |
+| `dependencies.require` | A colon-separated list of gems to require before running a dependency block. This can be used to load plugins automatically |
+| `dependencies.mypki` | Use MyPKI to pull from a PKI-enabled gem server |
+| `dependencies.config` | The URL to pull a remote iruby-dependencies config as JSON.|
+
+Remote configurations are generally used to install gem dependencies. For example:
+
+```json
+{ 
+    'gsl': [
+        ["exec", "yum install gsl"]
+    ]
+}
+```
+
+This configuration will install the `gsl` yum package if the user uses `IRuby::Dependencies` to install the `gsl` gem. 
+
 ## Usage
 
 `IRuby::Dependencies` uses the [Bundler Gemfile syntax](http://bundler.io/v1.5/gemfile.html) with some additional methods:
