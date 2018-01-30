@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = IRuby::Dependencies::VERSION
   spec.authors       = ["Kyle King"]
   spec.email         = ["kylejking@gmail.com"]
+  spec.license       = "MIT"
 
   spec.summary       = %q{IRuby::Dependencies is a module for injecting Ruby dependencies into Jupyter Notebooks}
   spec.homepage      = "https://github.com/jupyter-gallery/iruby-dependencies"
@@ -17,8 +18,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "iruby"
-  spec.add_dependency "bundler", "~>1.16.0"
-  spec.add_dependency "multi_json"
-  spec.add_development_dependency "rake"
+  spec.add_dependency "iruby", "~> 0.3"
+  spec.add_dependency "multi_json", "~> 1.13"
+  spec.add_dependency "bundler", "~> 1.16"
+
+  spec.add_development_dependency "rake", "~> 10.0"
 end
