@@ -1,3 +1,4 @@
+require 'json'
 require 'net/https'
 require 'bundler/inline'
 
