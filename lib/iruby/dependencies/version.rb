@@ -1,5 +1,5 @@
 module IRuby
-  module Dependencies
-    VERSION = "2.1.0"
+  class Dependencies
+    VERSION = "3.0.0"
   end
 end

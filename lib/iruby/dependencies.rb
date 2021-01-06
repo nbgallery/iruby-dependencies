@@ -1,82 +1,78 @@
-require 'bundler'
-
-# require 'mypki' if requested so it is an active gem
-if Bundler.settings['dependencies.mypki']
-  require 'mypki' 
-  require 'erector'
-end
-
-if gems = Bundler.settings['dependencies.require']
-  gems.split(':').each {|gem| require gem}
-end
-
-require 'iruby/dependencies/dsl'
-require 'iruby/dependencies/config'
-require 'iruby/dependencies/shared_helpers'
-require 'iruby/dependencies/version'
+require 'net/https'
+require 'bundler/inline'
 
 module IRuby
-  module Dependencies
-    ACTIVE_GEMS = {}
+  class Dependencies
+    def initialize config, verbose: false, &block
+      @config = config
+      @verbose = verbose 
 
-    # this code is taken from bundler/inline with small changes
-    def self.dependencies verbose: false, &gemfile
-      if ACTIVE_GEMS.empty?
-        ACTIVE_GEMS.merge! Gem.loaded_specs.map{|n,s| [n,s.version.to_s]}.to_h
+      instance_eval &block
+
+      gemfile do 
+        # tell bundler to use our gem sources
+        Gem.sources.each {|source| source source.to_s}
+        instance_eval &block
       end
+    end
 
-      Bundler.ui = verbose ? Bundler::UI::Shell.new : nil
-      MyPKI.init if Bundler.settings['dependencies.mypki']
-      
-      warn 'Dependencies installing. This could take a minute ...'
-      old_root = Bundler.method(:root)
-      
-      def Bundler.root
-        Bundler::SharedHelpers.pwd.expand_path
+    def gem name, *args
+      send *@config[name] if @config[name]
+    end
+
+    def exec string
+      stdout, stderr, exit_status = Open3.capture3(string)
+
+      if exit_status.success?
+        if @verbose 
+          Bundler.ui.info stdout unless stdout.empty?
+          Bundler.ui.warn stderr unless stderr.empty?
+        end
+      else
+        puts stdout unless stdout.empty?
+        warn stderr unless stderr.empty?
+        raise "\"exec '#{string}'\" failed on dependency installation"
       end
-      
-      ENV['BUNDLE_GEMFILE'] ||= 'Gemfile'
+    end
 
-      builder = Dsl.new
-      builder.instance_eval(&gemfile)
+    # gemfiles allow specifying alternate sources for gems
+    # make sure we check the block for gems in those sources
+    def source &block
+      instance_eval &block if block_given?
+    end
 
-      Gem::ConfigFile.new ['sources']
-      Gem.sources.each {|s| builder.source s}
-
-      ACTIVE_GEMS.each do |name,version|
-        builder.gem name, version, require: false
-      end
-
-      Config.process builder
-      definition = builder.to_definition(nil, true)
-
-      def definition.lock(*); end
-      definition.validate_ruby!
-
-      Bundler::Installer.install(Bundler.root, definition, :system => true)
-
-      runtime = Bundler::Runtime.new(nil, definition)
-      runtime.setup.require
-
-      bundler_module = class << Bundler; self; end
-      bundler_module.send(:define_method, :root, old_root)
-
-      html = IRuby.html <<-HTML
-        <div style='
-          margin: -0.4em; 
-          padding: 0.4em; 
-          background: rgba(0, 255, 0, .3); 
-          font-family: monospace;
-        '>
-          Dependencies successfully installed.
+    def to_html
+      <<-HTML
+        <div style='background: rgba(0,255,0,0.3);
+                    font-family: monospace;
+                    padding: 5px;'>
+          <b>Dependencies successfully installed!</b>
         </div>
       HTML
-
-      IRuby.display html; nil
     end
   end
 end
 
-def dependencies *args, &block
-  IRuby::Dependencies.dependencies *args, &block
+def dependencies **params, &block
+  config={}
+
+  begin 
+    if config_path = Bundler.settings['dependencies.config']
+      uri = URI config_path
+  
+      json = case uri.scheme
+        when /http/
+          Net::HTTP.get(uri)
+        else 
+          File.read(uri.path)
+        end
+  
+      config = JSON.parse(json)
+    end
+  
+  rescue => ex
+    warn "iruby-dependencies could not load #{config_path}: #{ex.message}"
+  end
+
+  IRuby::Dependencies.new config, **params, &block
 end
