@@ -38,7 +38,7 @@ module IRuby
 
     # gemfiles allow specifying alternate sources for gems
     # make sure we check the block for gems in those sources
-    def source &block
+    def source *args, &block
       instance_eval &block if block_given?
     end
 
