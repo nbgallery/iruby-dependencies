@@ -18,7 +18,9 @@ module IRuby
     end
 
     def gem name, *args
-      send *@config[name] if @config[name]
+      if commands = @config[name]
+        commands.each {|command| send *command}
+      end
     end
 
     def exec string
