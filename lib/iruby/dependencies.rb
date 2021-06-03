@@ -46,7 +46,7 @@ module IRuby
 
     def to_html
       <<-HTML
-        <div style='background: rgba(0,255,0,0.3);
+        <div class="stdsuccess" style='background: rgba(0,255,0,0.3);
                     font-family: monospace;
                     padding: 5px;'>
           <b>Dependencies successfully installed!</b>
